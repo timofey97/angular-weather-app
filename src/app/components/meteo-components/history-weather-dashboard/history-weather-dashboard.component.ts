@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import dayjs from 'dayjs';
 import { TableModule } from 'primeng/table';
@@ -15,24 +15,24 @@ import { IMeteo, IDailyUnits } from '../../../core/types/meteo.type';
   templateUrl: './history-weather-dashboard.component.html',
   styleUrl: './history-weather-dashboard.component.scss',
 })
-export class HistoryWeatherDashboardComponent {
-  currentMeteo!: IMeteo;
+export class HistoryWeatherDashboardComponent implements OnInit {
+  weatherHistory!: IMeteo;
   isLoading: boolean = true;
-  commonOptions: any;
-  chartData: any;
-  constructor(private meteoService: MeteoService) {}
+  chartOptions: any;
+  weatherChartData: any;
+
+  constructor(private weatherDataService: MeteoService) {} // Изменили имя сервиса
 
   ngOnInit() {
-    this.fetchWeatherData();
+    this.loadWeatherHistoryData();
   }
 
-  fetchWeatherData() {
-    this.meteoService.weatherHistory$.subscribe({
+  loadWeatherHistoryData() {
+    this.weatherDataService.weatherHistory$.subscribe({
       next: (data) => {
         if (!data) return;
-        this.currentMeteo = data;
+        this.weatherHistory = data;
         this.initializeChartOptions();
-
         this.prepareChartData();
         this.isLoading = false;
       },
@@ -40,105 +40,110 @@ export class HistoryWeatherDashboardComponent {
   }
 
   prepareChartData() {
-    const dailyTimes = this.currentMeteo.daily.time.map((unixTime) => {
-      return dayjs.unix(unixTime).format('DD. MMMM YYYY');
-    });
-    const dailyTemperature = this.currentMeteo.daily.temperature_2m_max;
-    const dailyPrecipitation = this.currentMeteo.daily.precipitation_sum;
-    const dailyWindSpeed = this.currentMeteo.daily.wind_speed_10m_max;
-    this.chartData = {
-      labels: dailyTimes,
+    // Преобразование временных меток дат в формат 'DD. MMMM YYYY'
+    const formattedDates = this.weatherHistory.daily.time.map((date) =>
+      dayjs(date).format('DD. MMMM YYYY')
+    );
+
+    // Подготовка данных для графика максимальной и минимальной температуры
+    const maxTemperatureData = this.weatherHistory.daily.temperature_2m_max;
+    const minTemperatureData = this.weatherHistory.daily.temperature_2m_min;
+
+    // Подготовка данных для графика ощущаемой температуры
+    const maxApparentTemperatureData =
+      this.weatherHistory.daily.apparent_temperature_max;
+    const minApparentTemperatureData =
+      this.weatherHistory.daily.apparent_temperature_min;
+
+    // Сборка объекта данных графика
+    this.weatherChartData = {
+      labels: formattedDates,
       datasets: [
         {
-          label: 'Temperature',
-          id: 'temperature_2m_max',
-          data: dailyTemperature,
-          fill: false,
-          backgroundColor: '#2196F3',
+          label: 'Max Temperature (°C)',
+          data: maxTemperatureData,
+          borderColor: '#FF6384',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          type: 'line',
           tension: 0.4,
-          minBarLength: 7,
+          yAxisID: 'y',
         },
         {
-          label: 'Precipitation',
-          id: 'precipitation_sum',
-          data: dailyPrecipitation,
-          fill: true,
-          backgroundColor: '#FF9800',
+          label: 'Min Temperature (°C)',
+          data: minTemperatureData,
+          borderColor: '#36A2EB',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          type: 'line',
           tension: 0.4,
-          minBarLength: 10,
+          yAxisID: 'y',
         },
         {
-          label: 'Wind Speed',
-          id: 'wind_speed_10m_max',
-          data: dailyWindSpeed,
-          fill: false,
-          backgroundColor: '#4CAF50',
+          label: 'Max Apparent Temperature (°C)',
+          data: maxApparentTemperatureData,
+          borderColor: '#FFCE56',
+          backgroundColor: 'rgba(255, 206, 86, 0.2)',
+          type: 'line',
           tension: 0.4,
-          minBarLength: 10,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Min Apparent Temperature (°C)',
+          data: minApparentTemperatureData,
+          borderColor: '#4BC0C0',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          type: 'line',
+          tension: 0.4,
+          yAxisID: 'y',
         },
       ],
     };
   }
 
   initializeChartOptions() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue(
-      '--text-color-secondary'
-    );
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    const getUnitForLabelCallback = (id: keyof IDailyUnits) =>
-      this.currentMeteo.daily_units[id];
-
-    this.commonOptions = {
+    this.chartOptions = {
+      responsive: true,
       maintainAspectRatio: false,
+      scales: {
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          ticks: {
+            color: 'white',
+          },
+          grid: {
+            color: 'white',
+            drawBorder: true,
+            borderColor: 'white',
+        },
+      },
+        x: {
+          ticks: {
+            color: 'white',
+          },
+          grid: {
+            color: 'white',
+            drawBorder: true,
+            borderColor: 'white',
+          }
+        }
+      },
       plugins: {
         legend: {
           labels: {
-            color: textColor,
+            color: 'white',
           },
+          display: true,
+          position: 'top',
         },
         tooltip: {
-          callbacks: {
-            label: function (context: any) {
-              var label = context.dataset.label || '';
-              if (label) {
-                label += ': ';
-              }
-              if (context.parsed.y !== null) {
-                label +=
-                  context.parsed.y +
-                  ' ' +
-                  getUnitForLabelCallback(context.dataset.id);
-              }
-              return label;
-            },
-          },
-        },
+          mode: 'index',
+          intersect: false,
+          bodyColor: 'white',
+          titleColor: 'white',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        }
       },
-      scales: {
-        x: {
-          ticks: {
-            color: textColorSecondary,
-            font: {
-              weight: 500,
-            },
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
-          },
-        },
-        y: {
-          ticks: {
-            color: textColorSecondary,
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
-          },
-        },
-      },
-    };
+    }
   }
 }

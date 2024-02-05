@@ -14,35 +14,37 @@ export class WeatherVisualBannerComponent implements OnChanges {
   icon: string = '';
 
   weatherCodeToIcon: Record<number, { day: string; night: string }> = {
-    0: { day: 'day.svg', night: 'night.svg' }, // Clear Sky
-    1: { day: 'cloudy-day-1.svg', night: 'cloudy-night-1.svg' }, // Mainly Clear
-    2: { day: 'cloudy-day-2.svg', night: 'cloudy-night-2.svg' }, // Partly Cloudy
-    3: { day: 'cloudy-day-3.svg', night: 'cloudy-night-3.svg' }, // Overcast
-    45: { day: 'cloudy.svg', night: 'cloudy.svg' }, // Fog
-    48: { day: 'cloudy.svg', night: 'cloudy.svg' }, // Depositing Rime Fog
-    51: { day: 'rainy-2.svg', night: 'rainy-5.svg' }, // Light Drizzle
-    53: { day: 'rainy-1.svg', night: 'rainy-4.svg' }, // Moderate Drizzle
-    55: { day: 'rainy-3.svg', night: 'rainy-6.svg' }, // Dense Intensity Drizzle
-    56: { day: 'rainy-3.svg', night: 'rainy-6.svg' }, // Light Freezing Drizzle
-    57: { day: 'rainy-6.svg', night: 'rain-7.svg' }, // Dense Intensity Freezing Drizzle
-    61: { day: 'rainy-4.svg', night: 'rainy-7.svg' }, // Slight Rain
-    63: { day: 'rainy-5.svg', night: 'rainy-7.svg' }, // Moderate Rain
-    65: { day: 'rainy-6.svg', night: 'rainy-7.svg' }, // Heavy Rain
-    66: { day: 'light-freezing-rain.svg', night: 'light-freezing-rain.svg' }, // Light Freezing Rain
-    67: { day: 'heavy-freezing-rain.svg', night: 'heavy-freezing-rain.svg' }, // Heavy Freezing Rain
-    71: { day: 'snowy-2.svg', night: 'snowy-5.svg' }, // Light Snowfall
-    73: { day: 'snowy-1.svg', night: 'snowy-4.svg' }, // Moderate Snowfall
-    75: { day: 'snowy-3.svg', night: 'snowy-6.svg' }, // Heavy Snowfall
-    77: { day: 'snowy-4.svg', night: 'snowy-4.svg' }, // Snow Grains
-    80: { day: 'rainy-3.svg', night: 'rainy-7.svg' }, // Slight Rain Showers
-    81: { day: 'rainy-3.svg', night: 'rainy-7.svg' }, // Moderate Rain Showers
-    82: { day: 'rainy-3.svg', night: 'rainy-7.svg' }, // Violent Rain Showers
-    85: { day: 'snowy-4.svg', night: 'snowy-6.svg' }, // Light Snow Showers
-    86: { day: 'snowy-4.svg', night: 'snowy-6.svg' }, // Heavy Snow Showers
-    95: { day: 'thunder.svg', night: 'thunder.svg' }, // Slight/Moderate Thunderstorm
-    96: { day: 'thunder.svg', night: 'thunder.svg' }, // Thunderstorm with Light Hail
-    99: { day: 'thunder.svg', night: 'thunder.svg' }, // Thunderstorm with Heavy Hail
+    0: { day: 'clear-day.svg', night: 'clear-night.svg' }, // Clear Sky
+    1: { day: 'partly-cloudy-day.svg', night: 'partly-cloudy-night.svg' }, // Mainly Clear
+    2: { day: 'partly-cloudy-day.svg', night: 'partly-cloudy-night.svg' }, // Partly Cloudy
+    3: { day: 'cloudy.svg', night: 'cloudy.svg' }, // Overcast
+    45: { day: 'fog.svg', night: 'fog.svg' }, // Fog
+    48: { day: 'fog.svg', night: 'fog.svg' }, // Depositing Rime Fog
+    51: { day: 'drizzle.svg', night: 'drizzle.svg' }, // Light Drizzle
+    53: { day: 'drizzle.svg', night: 'drizzle.svg' }, // Moderate Drizzle
+    55: { day: 'drizzle.svg', night: 'drizzle.svg' }, // Dense Intensity Drizzle
+    56: { day: 'drizzle.svg', night: 'drizzle.svg' }, // Light Freezing Drizzle
+    57: { day: 'drizzle.svg', night: 'drizzle.svg' }, // Dense Intensity Freezing Drizzle
+    61: { day: 'rain.svg', night: 'rain.svg' }, // Slight Rain
+    63: { day: 'rain.svg', night: 'rain.svg' }, // Moderate Rain
+    65: { day: 'rain.svg', night: 'rain.svg' }, // Heavy Rain
+    66: { day: 'sleet.svg', night: 'sleet.svg' }, // Light Freezing Rain
+    67: { day: 'sleet.svg', night: 'sleet.svg' }, // Heavy Freezing Rain
+    71: { day: 'snow.svg', night: 'snow.svg' }, // Light Snowfall
+    73: { day: 'snow.svg', night: 'snow.svg' }, // Moderate Snowfall
+    75: { day: 'snow.svg', night: 'snow.svg' }, // Heavy Snowfall
+    77: { day: 'snowflake.svg', night: 'snowflake.svg' }, // Snow Grains
+    80: { day: 'rain.svg', night: 'rain.svg' }, // Slight Rain Showers
+    81: { day: 'rain.svg', night: 'rain.svg' }, // Moderate Rain Showers
+    82: { day: 'rain.svg', night: 'rain.svg' }, // Violent Rain Showers
+    85: { day: 'snow.svg', night: 'snow.svg' }, // Light Snow Showers
+    86: { day: 'snow.svg', night: 'snow.svg' }, // Heavy Snow Showers
+    95: { day: 'thunderstorms-day.svg', night: 'thunderstorms-night.svg' }, // Slight/Moderate Thunderstorm
+    96: { day: 'thunderstorms-day.svg', night: 'thunderstorms-night.svg' }, // Thunderstorm with Light Hail
+    99: { day: 'thunderstorms-day.svg', night: 'thunderstorms-night.svg' }, // Thunderstorm with Heavy Hail
   };
+
+
   ngOnChanges(): void {
     this.selectIcon();
   }

@@ -55,10 +55,15 @@ export class MeteoService {
       this.geoInformation.getValue()?.lat
     }&longitude=${
       this.geoInformation.getValue()?.lon
-    }&start_date=${startDate}&end_date=${endDate}&...`; // URL with other parameters
+    }&start_date=${startDate}&end_date=${endDate}&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum`; // URL with other parameters
+    console.log("🚀 ~ MeteoService ~ retrieveWeatherHistory ~ historyUrl:", historyUrl)
 
     this.httpClient.get<IMeteo>(historyUrl).subscribe({
-      next: (data) => this.processMeteoData(data, 'history'),
+      next: (data) => {
+        console.log("🚀 ~ MeteoService ~ retrieveWeatherHistory ~ data:", data)
+
+        this.processMeteoData(data, 'history')
+      },
       error: (error) =>
         this.showErrorMessage(error, 'Failed to fetch weather history'),
     });
@@ -132,6 +137,7 @@ export class MeteoService {
       severity: 'success',
       summary: 'Success',
       detail: `Meteo data for ${type} fetched successfully`,
+      key: 'tl'
     });
   }
 
@@ -140,6 +146,7 @@ export class MeteoService {
       severity: 'error',
       summary: summary,
       detail: detail,
+      // key: 'bt'
     });
   }
 

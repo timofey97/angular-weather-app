@@ -1,17 +1,22 @@
 interface IMeteo {
-  current: ICurrentMeteo;
-  current_units: ICurrentUnits;
+  time: string[];
+  weathercode: number[];
+  sunrise: string[];
+  sunset: string[];
+  precipitation_sum: number[];
+  rain_sum: number[];
+  snowfall_sum: number[];
   daily: IDailyMeteo;
+  hourly?: IHourlyMeteo;
+  elevation?: number;
+  generationtime_ms?: number;
+  latitude?: number;
+  longitude?: number;
+  timezone?: string;
+  timezone_abbreviation?: string;
+  utc_offset_hours?: number;
   daily_units: IDailyUnits;
-  elevation: number;
-  generationtime_ms: number;
-  hourly: IHourlyMeteo;
-  hourly_units: IHourlyUnits;
-  latitude: number;
-  longitude: number;
-  timezone: string;
-  timezone_abbreviation: string;
-  utc_offset_hours: number;
+  current_units: ICurrentUnits;
 }
 
 interface ICurrentMeteo {
@@ -64,6 +69,9 @@ interface IDailyMeteo {
   temperature_2m_max: Array<number>;
   precipitation_sum: Array<number>;
   wind_speed_10m_max: Array<number>;
+  temperature_2m_min: Array<number>;
+  apparent_temperature_max: Array<number>;
+  apparent_temperature_min: Array<number>;
 }
 
 interface IDailyUnits {
